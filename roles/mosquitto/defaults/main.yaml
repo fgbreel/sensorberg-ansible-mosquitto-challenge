@@ -3,3 +3,8 @@ clients:
   - dummy-1.example.com
   - dummy-2.example.com
   - dummy-3.example.com
+
+easyrsa_gpg_key_id: 72964219390D0D0E
+easyrsa_version: 3.1.5
+easyrsa_directory_name: "EasyRSA-{{ easyrsa_version }}"
+easyrsa_script: "/usr/local/src/{{ easyrsa_directory_name }}/easyrsa"

@@ -2,28 +2,26 @@
   ansible.builtin.include_tasks:
     file: easyrsa.yaml
 
-- name: initialize private key infrastructure
-  command: |
-    /usr/local/src/EasyRSA-3.1.5/easyrsa --batch init-pki
+- name: initialize public key infrastructure
+  command: "{{ easyrsa_script }} --batch init-pki"
   args:
     chdir: "/root"
     creates: "/root/pki"
 
-- name: initialize private key infrastructure
-  command: |
-    /usr/local/src/EasyRSA-3.1.5/easyrsa --batch build-ca nopass
+- name: initialize certificate authority
+  command: "{{ easyrsa_script }} --batch build-ca nopass"
   args:
     chdir: "/root"
     creates: "/root/pki/ca.crt"
 
 - name: generate server certificate
-  ansible.builtin.command: /usr/local/src/EasyRSA-3.1.5/easyrsa --batch build-server-full "{{ mosquitto_fqdn }}" nopass
+  ansible.builtin.command: "{{ easyrsa_script }} --batch build-server-full {{ mosquitto_fqdn }} nopass"
   args:
     chdir: "/root"
     creates: "/root/pki/issued/{{ mosquitto_fqdn }}.crt"
 
 - name: generate client certificates
-  ansible.builtin.command: /usr/local/src/EasyRSA-3.1.5/easyrsa --batch build-client-full "{{ item }}" nopass
+  ansible.builtin.command: "{{ easyrsa_script }} --batch build-client-full {{ item }} nopass"
   args:
     chdir: "/root"
     creates: "/root/pki/issued/{{ item }}.crt"

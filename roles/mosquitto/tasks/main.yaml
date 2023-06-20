@@ -9,7 +9,7 @@
     name: mosquitto
     state: present
 
-- name: ensure private key infrastructure is present
+- name: ensure public key infrastructure is present
   ansible.builtin.include_tasks:
     file: pki.yaml
 
