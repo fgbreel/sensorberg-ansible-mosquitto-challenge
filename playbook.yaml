@@ -3,13 +3,12 @@
   hosts: all
   become: yes
 
-  tasks:
-  - name: ensure epel is enabled
-    yum:
-      name: epel-release
-      state: present
+  vars:
+    mosquitto_fqdn: mosquitto.example.com
+    clients:
+      - client-1.example.com
+      - client-2.example.com
+      - client-3.example.com
 
-  - name: install packages
-    yum:
-      name: mosquitto
-      state: present
+  roles:
+    - mosquitto

@@ -1,0 +1,33 @@
+- name: check if easyrsa is already present
+  ansible.builtin.stat:
+    path: /usr/local/src/EasyRSA-3.1.5
+  register: easyrsa
+
+- name: ensure easyrsa project gpg key is present
+  ansible.builtin.command: gpg --recv-keys "72964219390D0D0E"
+  when: not easyrsa.stat.exists
+
+- name: ensure easyrsa source and signature are present
+  ansible.builtin.get_url:
+    url: "https://github.com/OpenVPN/easy-rsa/releases/download/v3.1.5/EasyRSA-3.1.5.tgz"
+    dest: "/tmp"
+  with_items:
+  - "https://github.com/OpenVPN/easy-rsa/releases/download/v3.1.5/EasyRSA-3.1.5.tgz"
+  - "https://github.com/OpenVPN/easy-rsa/releases/download/v3.1.5/EasyRSA-3.1.5.tgz.sig"
+  when: not easyrsa.stat.exists
+
+- name: verify tarball signature and install
+  command: gpg --verify "EasyRSA-3.1.5.tgz.sig" "EasyRSA-3.1.5.tgz"
+  args:
+    chdir: /tmp
+  register: easyrsa_tarball_verified
+  when: not easyrsa.stat.exists
+
+- name: extract easyrsa tarball
+  ansible.builtin.unarchive:
+    src: /tmp/EasyRSA-3.1.5.tgz
+    dest: /usr/local/src
+    owner: root
+    group: root
+    remote_src: yes
+  when: not easyrsa.stat.exists and easyrsa_tarball_verified

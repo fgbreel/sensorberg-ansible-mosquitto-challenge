@@ -1,0 +1,15 @@
+---
+- name: ensure epel is enabled
+  yum:
+    name: epel-release
+    state: present
+
+- name: install packages
+  yum:
+    name: mosquitto
+    state: present
+
+- name: ensure private key infrastructure is present
+  ansible.builtin.include_tasks:
+    file: pki.yaml
+
