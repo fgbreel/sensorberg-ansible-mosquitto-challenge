@@ -32,6 +32,17 @@
   notify:
   - reload mosquitto
 
+- name: ensure mosquitto certificate revocation list is present
+  ansible.builtin.copy:
+    src: /root/pki/crl.pem
+    dest: /etc/mosquitto/certs/crl.pem
+    owner: root
+    group: mosquitto
+    mode: 0640
+    remote_src: true
+  notify:
+  - reload mosquitto
+
 - name: ensure mosquitto certificate is present
   ansible.builtin.copy:
     src: "/root/pki/issued/{{ item }}"

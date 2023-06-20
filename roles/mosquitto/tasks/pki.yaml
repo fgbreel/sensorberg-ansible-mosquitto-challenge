@@ -26,3 +26,8 @@
     chdir: "/root"
     creates: "/root/pki/issued/{{ item }}.crt"
   loop: "{{ clients }}"
+
+- name: update certificate revocation list
+  command: "{{ easyrsa_script }} --batch gen-crl"
+  args:
+    chdir: "/root"
