@@ -13,6 +13,51 @@
   ansible.builtin.include_tasks:
     file: pki.yaml
 
+- name: ensure mosquito certs directory is present
+  ansible.builtin.file:
+    path: /etc/mosquitto/certs
+    state: directory
+    mode: 0750
+    owner: root
+    group: mosquitto
+
+- name: ensure mosquitto ca certificate is present
+  ansible.builtin.copy:
+    src: /root/pki/ca.crt
+    dest: /etc/mosquitto/certs/ca.crt
+    owner: root
+    group: mosquitto
+    mode: 0640
+    remote_src: true
+  notify:
+  - reload mosquitto
+
+- name: ensure mosquitto certificate is present
+  ansible.builtin.copy:
+    src: "/root/pki/issued/{{ item }}"
+    dest: "/etc/mosquitto/certs/{{ item }}"
+    owner: root
+    group: mosquitto
+    mode: 0640
+    remote_src: true
+  with_items:
+  - "{{ mosquitto_fqdn }}.crt"
+  notify:
+  - reload mosquitto
+
+- name: ensure mosquitto certificate key is present
+  ansible.builtin.copy:
+    src: "/root/pki/private/{{ item }}"
+    dest: "/etc/mosquitto/certs/{{ item }}"
+    owner: root
+    group: mosquitto
+    mode: 0640
+    remote_src: true
+  with_items:
+  - "{{ mosquitto_fqdn }}.key"
+  notify:
+  - reload mosquitto
+
 - name: ensure mosquitto configuration
   ansible.builtin.template:
     src: "{{ item }}"

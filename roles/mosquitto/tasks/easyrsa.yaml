@@ -9,7 +9,7 @@
 
 - name: ensure easyrsa source and signature are present
   ansible.builtin.get_url:
-    url: "https://github.com/OpenVPN/easy-rsa/releases/download/v3.1.5/EasyRSA-3.1.5.tgz"
+    url: "{{ item }}"
     dest: "/tmp"
   with_items:
   - "https://github.com/OpenVPN/easy-rsa/releases/download/v3.1.5/EasyRSA-3.1.5.tgz"

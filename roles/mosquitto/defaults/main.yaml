@@ -1,1 +1,5 @@
 mosquitto_fqdn: mosquitto.example.com
+clients:
+  - dummy-1.example.com
+  - dummy-2.example.com
+  - dummy-3.example.com
