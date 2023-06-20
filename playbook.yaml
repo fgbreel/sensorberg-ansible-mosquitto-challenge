@@ -1,5 +1,5 @@
 ---
-- name: install and configure mosquitto with mqtt listener over tls
+- name: install and configure mosquitto with mqtt listener over tls with pki
   hosts: all
   become: yes
 

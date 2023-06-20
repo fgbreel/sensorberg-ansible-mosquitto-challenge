@@ -1,0 +1,5 @@
+- name: reload mosquitto
+  ansible.builtin.systemd:
+    name: mosquitto
+    state: reloaded
+    enabled: true

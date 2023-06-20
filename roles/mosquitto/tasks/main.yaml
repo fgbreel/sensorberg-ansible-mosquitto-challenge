@@ -13,3 +13,11 @@
   ansible.builtin.include_tasks:
     file: pki.yaml
 
+- name: ensure mosquitto configuration
+  ansible.builtin.template:
+    src: "{{ item }}"
+    dest: "/{{ item }}"
+  with_items:
+  - etc/mosquitto/mosquitto.conf
+  notify:
+  - reload mosquitto
