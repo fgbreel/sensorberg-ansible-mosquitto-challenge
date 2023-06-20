@@ -3,38 +3,13 @@
   hosts: all
   become: yes
 
-  vars:
-    mosquitto_gpg_key: A0D6EEA1DCAE49A635A3B2F0779B22DFB3E717B7
-    mosquitto_version: 2.0.15
-    mosquitto_tarball: mosquitto-{{ mosquitto_version }}.tar.gz
-    mosquitto_tarball_sig: mosquitto-{{ mosquitto_version }}.tar.gz.asc
-
   tasks:
   - name: ensure epel is enabled
     yum:
       name: epel-release
       state: present
 
-  - name: install build essential tools
+  - name: install packages
     yum:
-      name:
-        - "@Development tools"
-        - cjson-devel
+      name: mosquitto
       state: present
-
-  - name: ensure mosquitto project gpg key is present
-    command: gpg --recv-keys "{{ mosquitto_gpg_key }}"
-
-  - name: ensure mosquitto sources and signature are present
-    get_url:
-      url: "https://mosquitto.org/files/source/{{ item }}"
-      dest: "/tmp/{{ item }}"
-    with_items:
-    - "{{ mosquitto_tarball }}"
-    - "{{ mosquitto_tarball_sig }}"
-
-  - name: verify tarball signature
-    command: gpg --verify "{{ mosquitto_tarball_sig }}" "{{ mosquitto_tarball }}"
-    args:
-      chdir: /tmp
-    register: verified
